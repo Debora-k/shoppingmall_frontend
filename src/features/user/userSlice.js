@@ -24,10 +24,10 @@ export const loginWithGoogle = createAsyncThunk(
 
 export const logout = createAsyncThunk(
   "user/logout", 
-  async({navigate}, {dispatch, rejectWithValue}) => {
+  async({navigate},{dispatch, rejectWithValue}) => {
     try{
       await sessionStorage.removeItem("token");
-      navigate("/login");
+      // navigate("/login");
     } catch(error){
       dispatch(showToastMessage({message:"Sorry, logout failed", status:"error"}));
       return rejectWithValue(error.error);
@@ -114,7 +114,7 @@ const userSlice = createSlice({
     .addCase(logout.fulfilled, (state,action)=> {
       state.loading=false;
       state.error="";
-      state.user="";
+      state.user=null;
     })
     .addCase(logout.rejected, (state,action)=> {
       state.loading=false;

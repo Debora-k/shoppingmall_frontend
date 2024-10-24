@@ -37,8 +37,10 @@ const Navbar = ({ user }) => {
       navigate(`?name=${event.target.value}`);
     }
   };
-  const handleLogout = () => {
+  const handleLogout = async() => {
     dispatch(logout({navigate}));
+    //await dispatch(logout());
+    //navigate("/login"); // if I want to navigate to /login page
   };
   return (
     <div>

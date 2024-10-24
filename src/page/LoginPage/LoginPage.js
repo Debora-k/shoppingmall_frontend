@@ -30,9 +30,12 @@ const Login = () => {
     //구글 로그인 하기
   };
 
+useEffect(() => {
   if (user) {
     navigate("/");
   }
+},[user]);
+
   return (
     <>
       <Container className="login-area">

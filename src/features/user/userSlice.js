@@ -9,6 +9,7 @@ export const loginWithEmail = createAsyncThunk(
   async ({ email, password }, { rejectWithValue }) => {
     try{
       const response = await api.post("/auth/login", {email,password});
+      sessionStorage.setItem("token", response.data.token);
       return response.data;
     }catch(error){
       return rejectWithValue(error.error);
@@ -21,7 +22,18 @@ export const loginWithGoogle = createAsyncThunk(
   async (token, { rejectWithValue }) => {}
 );
 
-export const logout = () => (dispatch) => {};
+export const logout = createAsyncThunk(
+  "user/logout", 
+  async({navigate}, {dispatch, rejectWithValue}) => {
+    try{
+      await sessionStorage.removeItem("token");
+      navigate("/login");
+    } catch(error){
+      dispatch(showToastMessage({message:"Sorry, logout failed", status:"error"}));
+      return rejectWithValue(error.error);
+    }
+});
+
 export const registerUser = createAsyncThunk(
   "user/registerUser",
   async (
@@ -42,7 +54,14 @@ export const registerUser = createAsyncThunk(
 
 export const loginWithToken = createAsyncThunk(
   "user/loginWithToken",
-  async (_, { rejectWithValue }) => {}
+  async (_, { rejectWithValue }) => {
+    try{
+      const response = await api.get("/user/me");
+      return response.data;
+    } catch(error){
+      return rejectWithValue(error.error);
+    } 
+  }
 );
 
 const userSlice = createSlice({
@@ -83,7 +102,24 @@ const userSlice = createSlice({
     .addCase(loginWithEmail.rejected,(state,action)=>{
       state.loading=false;
       state.loginError=action.payload;
+    })
+    //.addCase(loginWithToken.pending,(state,action)=>{}) // no need to display pending for users
+    .addCase(loginWithToken.fulfilled,(state,action)=>{
+      state.user = action.payload.user;
     }) 
+    //.addCase(loginWithToken.rejected,(state,action)=>{}) // also users don't need to know rejected (leading to login page)
+    .addCase(logout.pending, (state,action)=> {
+      state.loading=true;
+    })
+    .addCase(logout.fulfilled, (state,action)=> {
+      state.loading=false;
+      state.error="";
+      state.user="";
+    })
+    .addCase(logout.rejected, (state,action)=> {
+      state.loading=false;
+      state.error=action.payload;
+    })
   },
 });
 export const { clearErrors } = userSlice.actions;

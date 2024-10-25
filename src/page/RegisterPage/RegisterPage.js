@@ -39,7 +39,7 @@ const RegisterPage = () => {
   };
 
   const handleChange = (event) => {
-    event.preventDefault();
+    //event.preventDefault(); commented out for checkbox
     let { id, value, type, checked } = event.target;
     if (id === "confirmPassword" && passwordError) setPasswordError("");
     if (type === "checkbox") {

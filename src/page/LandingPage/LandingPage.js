@@ -1,23 +1,42 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import ReactPaginate from "react-paginate";
 import ProductCard from "./components/ProductCard";
 import { Row, Col, Container } from "react-bootstrap";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductList } from "../../features/product/productSlice";
 
 const LandingPage = () => {
   const dispatch = useDispatch();
 
-  const productList = useSelector((state) => state.product.productList);
+
+  const { productList, totalPageNum } = useSelector((state) => state.product);
   const [query] = useSearchParams();
+  const navigate = useNavigate();
   const name = query.get("name");
+  const [searchQuery, setSearchQuery] = useState({
+    page: query.get("page") || 1,
+    name: query.get("name") || "",
+  });
+
+  useEffect(()=>{
+    dispatch(getProductList({...searchQuery, name}));
+  },[query])
+
   useEffect(() => {
-    dispatch(
-      getProductList({
-        name,
-      })
-    );
-  }, [query]);
+    //검색어나 페이지가 바뀌면 url바꿔주기 (검색어또는 페이지가 바뀜 => url 바꿔줌=> url쿼리 읽어옴=> 이 쿼리값 맞춰서  상품리스트 가져오기)
+    if(searchQuery.name ==="") {
+      delete searchQuery.name;
+    }
+    const params = new URLSearchParams(searchQuery);
+    const query = params.toString();
+    navigate("?" + query);
+  }, [searchQuery]);
+
+  const handlePageClick = ({ selected }) => {
+    //  쿼리에 페이지값 바꿔주기
+    setSearchQuery({...searchQuery, page: selected + 1});
+  };
 
   return (
     <Container>
@@ -38,6 +57,27 @@ const LandingPage = () => {
           </div>
         )}
       </Row>
+      <ReactPaginate
+          nextLabel="next >"
+          onPageChange={handlePageClick}
+          pageRangeDisplayed={5}
+          pageCount={totalPageNum} //total page
+          forcePage={searchQuery.page - 1}
+          previousLabel="< previous"
+          renderOnZeroPageCount={null}
+          pageClassName="page-item"
+          pageLinkClassName="page-link"
+          previousClassName="page-item"
+          previousLinkClassName="page-link"
+          nextClassName="page-item"
+          nextLinkClassName="page-link"
+          breakLabel="..."
+          breakClassName="page-item"
+          breakLinkClassName="page-link"
+          containerClassName="pagination"
+          activeClassName="active"
+          className="display-center list-style-none"
+        />
     </Container>
   );
 };

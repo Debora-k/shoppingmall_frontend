@@ -11,6 +11,7 @@ import {
   deleteProduct,
   setSelectedProduct,
 } from "../../features/product/productSlice";
+import DeleteProductModal from "./component/DeleteProductModal";
 
 
 const AdminProductPage = () => {
@@ -23,8 +24,9 @@ const AdminProductPage = () => {
     page: query.get("page") || 1,
     name: query.get("name") || "",
   }); //검색 조건들을 저장하는 객체
-
+  const [showModal, setShowModal] = useState(false);
   const [mode, setMode] = useState("new");
+  const [productIdToDelete, setProductIdToDelete] = useState(null);
 
   const tableHeader = [
     "#",
@@ -52,13 +54,22 @@ const AdminProductPage = () => {
     navigate("?" + query);
   }, [searchQuery]);
 
-  const deleteItem = (id) => {
-    //아이템 삭제하가ㅣ
+  // deleteItem
+  const openDeleteProductModal = (id) => {
+    setProductIdToDelete(id);
+    setShowModal(true);
+  };
+
+  const deleteItem = () => {
+    dispatch(deleteProduct(productIdToDelete));
   };
 
   const openEditForm = (product) => {
     //edit모드로 설정하고
+    setMode("edit");
     // 아이템 수정다이얼로그 열어주기
+    dispatch(setSelectedProduct(product));
+    setShowDialog(true);
   };
 
   const handleClickNewItem = () => {
@@ -91,7 +102,7 @@ const AdminProductPage = () => {
         <ProductTable
           header={tableHeader}
           data={productList}
-          deleteItem={deleteItem}
+          openDeleteProductModal={openDeleteProductModal}
           openEditForm={openEditForm}
         />
         <ReactPaginate
@@ -121,6 +132,11 @@ const AdminProductPage = () => {
         mode={mode}
         showDialog={showDialog}
         setShowDialog={setShowDialog}
+      />
+      <DeleteProductModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        deleteItem={deleteItem}
       />
     </div>
   );

@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import { currencyFormat } from "../../../utils/number";
 
-const ProductTable = ({ header, data, deleteItem, openEditForm }) => {
+const ProductTable = ({ header, data, openDeleteProductModal, openEditForm }) => {
   return (
     <div className="overflow-x">
       <Table striped bordered hover>
@@ -37,7 +37,7 @@ const ProductTable = ({ header, data, deleteItem, openEditForm }) => {
                   <Button
                     size="sm"
                     variant="danger"
-                    onClick={() => deleteItem(item._id)}
+                    onClick={() => openDeleteProductModal(item._id)}
                     className="mr-1"
                   >
                     -

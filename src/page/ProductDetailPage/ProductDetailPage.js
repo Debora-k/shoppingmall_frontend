@@ -7,6 +7,7 @@ import { currencyFormat } from "../../utils/number";
 import "./style/productDetail.style.css";
 import { getProductDetail } from "../../features/product/productSlice";
 import { addToCart } from "../../features/cart/cartSlice";
+import { showToastMessage } from "../../features/common/uiSlice";
 
 const ProductDetail = () => {
   const dispatch = useDispatch();
@@ -19,11 +20,23 @@ const ProductDetail = () => {
 
   const addItemToCart = () => {
     //사이즈를 아직 선택안했다면 에러
+    if(size ==="") {
+      setSizeError(true);
+      return;
+    }
     // 아직 로그인을 안한유저라면 로그인페이지로
+    if(!user) {
+      navigate("/login");
+      dispatch(showToastMessage({message:"Please log in first", status:"error"}));
+      return;
+    }
     // 카트에 아이템 추가하기
+    dispatch(addToCart({id,size}));
   };
   const selectSize = (value) => {
     // 사이즈 추가하기
+    if(sizeError) setSizeError(false);
+    setSize(value);
   };
 
   useEffect(() => {
@@ -86,7 +99,7 @@ const ProductDetail = () => {
             </Dropdown.Menu>
           </Dropdown>
           <div className="warning-message">
-            {sizeError && "사이즈를 선택해주세요."}
+            {sizeError && "Please choose your size."}
           </div>
           <Button variant="dark" className="add-button" onClick={addItemToCart}>
             추가

@@ -8,8 +8,8 @@ import { updateQty, deleteCartItem } from "../../../features/cart/cartSlice";
 const CartProductCard = ({ item }) => {
   const dispatch = useDispatch();
 
-  const handleQtyChange = (id, value) => {
-    dispatch(updateQty({ id, value }));
+  const handleQtyChange = (id, value, size) => {
+    dispatch(updateQty({ id, value, size }));
   };
 
   const deleteCart = (id) => {
@@ -35,18 +35,19 @@ const CartProductCard = ({ item }) => {
           </div>
 
           <div>
-            <strong>₩ {currencyFormat(item.productId.price)}</strong>
+            <strong>$ {currencyFormat(item.productId.price)}</strong>
           </div>
           <div>Size: {item.size}</div>
-          <div>Total: ₩ {currencyFormat(item.productId.price * item.qty)}</div>
+          <div>Total: $ {currencyFormat(item.productId.price * item.qty)}</div>
           <div>
             Quantity:
             <Form.Select
-              onChange={(event) =>
-                handleQtyChange(item._id, event.target.value)
-              }
+              onChange={(event) => {
+                console.log(item)
+                handleQtyChange(item._id, event.target.value, item.size) 
+              }}
               required
-              defaultValue={item.qty}
+              value={item.qty}
               className="qty-dropdown"
             >
               <option value={1}>1</option>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
 import {
@@ -8,14 +8,19 @@ import {
   faShoppingBag,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../features/user/userSlice";
+import { getCartList, initialCart } from "../../features/cart/cartSlice";
 
 const Navbar = ({ user }) => {
   const dispatch = useDispatch();
   const { cartItemCount } = useSelector((state) => state.cart);
   const isMobile = window.navigator.userAgent.indexOf("Mobile") !== -1;
+  useEffect(() => {
+    if(user) dispatch(getCartList());
+    //카트리스트 불러오기
+  }, [user]);
   const [showSearchBox, setShowSearchBox] = useState(false);
   const menuList = [
     "WOMEN",
@@ -42,6 +47,7 @@ const Navbar = ({ user }) => {
 
   const handleLogout = async() => {
     dispatch(logout({navigate}));
+    dispatch(initialCart());
     //await dispatch(logout());
     //navigate("/login"); // if I want to navigate to /login page
   };
@@ -106,7 +112,7 @@ const Navbar = ({ user }) => {
             <div onClick={() => navigate("/cart")} className="nav-icon">
               <FontAwesomeIcon icon={faShoppingBag} />
               {!isMobile && (
-                <span style={{ cursor: "pointer" }}>{`Shopping cart(${
+                <span style={{ cursor: "pointer" }}>{`Cart(${
                   cartItemCount || 0
                 })`}</span>
               )}

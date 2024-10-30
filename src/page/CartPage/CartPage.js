@@ -13,6 +13,7 @@ const CartPage = () => {
 
   useEffect(() => {
     //카트리스트 불러오기
+    dispatch(getCartList());
   }, []);
 
   return (
@@ -25,13 +26,13 @@ const CartPage = () => {
             ))
           ) : (
             <div className="text-align-center empty-bag">
-              <h2>카트가 비어있습니다.</h2>
-              <div>상품을 담아주세요!</div>
+              <h2>Shopping Bag</h2>
+              <div>Your shopping bag is empty!</div>
             </div>
           )}
         </Col>
         <Col xs={12} md={5}>
-          <OrderReceipt />
+          <OrderReceipt cartList={cartList} totalPrice={totalPrice}/>
         </Col>
       </Row>
     </Container>

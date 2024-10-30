@@ -80,7 +80,7 @@ const ProductDetail = () => {
               id="dropdown-basic"
               align="start"
             >
-              {size === "" ? "사이즈 선택" : size.toUpperCase()}
+              {size === "" ? "Select size" : size.toUpperCase()}
             </Dropdown.Toggle>
 
             <Dropdown.Menu className="size-drop-down">
@@ -102,7 +102,7 @@ const ProductDetail = () => {
             {sizeError && "Please choose your size."}
           </div>
           <Button variant="dark" className="add-button" onClick={addItemToCart}>
-            추가
+            Add
           </Button>
         </Col>
       </Row>

@@ -9,6 +9,7 @@ import {
   createProduct,
   editProduct,
 } from "../../../features/product/productSlice";
+import { showToastMessage } from "../../../features/common/uiSlice";
 
 const InitialFormData = {
   name: "",
@@ -21,7 +22,7 @@ const InitialFormData = {
   price: 0,
 };
 
-const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
+const NewItemDialog = ({ mode, showDialog, setShowDialog, page }) => {
   const { error, success, selectedProduct } = useSelector(
     (state) => state.product
   );
@@ -32,8 +33,12 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
   const dispatch = useDispatch();
   const [stockError, setStockError] = useState(false);
 
+
   useEffect(() => {
-    if (success) setShowDialog(false);
+    if (success) {
+      setShowDialog(false);
+      dispatch(clearError());
+    }
   }, [success]);
 
   useEffect(() => {
@@ -80,9 +85,8 @@ const NewItemDialog = ({ mode, showDialog, setShowDialog }) => {
       dispatch(createProduct({...formData,stock:totalStock}));
     } else {
       // 상품 수정하기
-      dispatch(editProduct({...formData, stock:totalStock, id:selectedProduct._id}));
+      dispatch(editProduct({...formData, stock:totalStock, id:selectedProduct._id, page:page}));
     }
-    setShowDialog(false);
   };
 
   const handleChange = (event) => {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
@@ -7,6 +7,7 @@ import { currencyFormat } from "../../../utils/number";
 const OrderReceipt = ({cartList, totalPrice}) => {
   const location = useLocation();
   const navigate = useNavigate();
+
 
   return (
     <div className="receipt-container">
@@ -32,10 +33,10 @@ const OrderReceipt = ({cartList, totalPrice}) => {
         </div>
       </div>
       {location.pathname.includes("/cart") && cartList.length > 0 && (
-        <Button
+        <Button 
           variant="dark"
           className="payment-button"
-          onClick={() => navigate("/payment")}
+          onClick={() => navigate("/payment") }
         >
           Continue to checkout
         </Button>

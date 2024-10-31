@@ -37,11 +37,33 @@ export const createProduct = createAsyncThunk(
     try{
       const response = await api.post("/product",formData);
       if(response.status!==200) throw new Error(response.error);
+      
       dispatch(showToastMessage({message:"상품생성완료", status:"success"}));
       dispatch(getProductList({page:1}));
       return response.data.data;
     }catch(error){
-      return rejectWithValue(error.error);
+      console.log(error);
+      if(error?.error?.message === "Product validation failed: image: Path `image` is required.") {
+        dispatch(showToastMessage({message:"Add an image!", status:"error"}));
+        return rejectWithValue("Add an image!");
+      }
+      if(error?.error?.errorResponse?.code === 11000) {
+        dispatch(showToastMessage({message:"The SKU already exists", status:"error"}));
+        return rejectWithValue("The SKU already exists, Please input another sku");
+      }
+      if(error?.error === "Price cannot be zero or negative") {
+        dispatch(showToastMessage({message:"Price cannot be zero or negative!", status:"error"}));
+        return rejectWithValue("Price cannot be zero or negative!");
+      }
+      if(error?.error === "Name shouldn't be empty!") {
+        dispatch(showToastMessage({message:"Add a correct name", status:"error"}));
+        return rejectWithValue("Add a correct name");
+      }
+      if(error?.error === "Description shouldn't be empty!") {
+        dispatch(showToastMessage({message:"Add description", status:"error"}));
+        return rejectWithValue("Add description");
+      }
+      return rejectWithValue("Something went wrong!");
     }
   }
 );
@@ -64,15 +86,35 @@ export const deleteProduct = createAsyncThunk(
 
 export const editProduct = createAsyncThunk(
   "products/editProduct",
-  async ({ id, ...formData }, { dispatch, rejectWithValue }) => {
+  async ({ id, page, ...formData }, { dispatch, rejectWithValue }) => {
     try{
       const response = await api.put(`/product/${id}`, formData);
       if(response.status!==200) throw new Error(response.error);
       dispatch(showToastMessage({message:"상품수정완료", status:"success"}));
-      dispatch(getProductList({page:1}));
+      dispatch(getProductList({page:page}));
       return response.data.data;
     } catch(error){
-      return rejectWithValue(error.error);
+      if(error.error === "Price cannot be zero or negative") {
+        dispatch(showToastMessage({message:"Price cannot be zero or negative!", status:"error"}));
+        return rejectWithValue("Price cannot be zero or negative!");
+      }
+      if(error?.error?.errorResponse?.code === 11000) {
+        dispatch(showToastMessage({message:"The SKU already exists", status:"error"}));
+        return rejectWithValue("The SKU already exists, Please input another sku");
+      }
+      if(error?.error?.message === "Product validation failed: image: Path `image` is required.") {
+        dispatch(showToastMessage({message:"Add an image!", status:"error"}));
+        return rejectWithValue("Add an image!");
+      }
+      if(error?.error === "Name shouldn't be empty!") {
+        dispatch(showToastMessage({message:"Add a correct name", status:"error"}));
+        return rejectWithValue("Add a correct name");
+      }
+      if(error?.error === "Description shouldn't be empty!") {
+        dispatch(showToastMessage({message:"Add description", status:"error"}));
+        return rejectWithValue("Add description");
+      }
+      return rejectWithValue("Something went wrong! Please try again.");
     }
   }
 );
@@ -106,7 +148,7 @@ const productSlice = createSlice({
     })
     .addCase(createProduct.fulfilled,(state,action)=>{
       state.loading=false;
-      state.erorr="";
+      state.error="";
       state.success=true;
     })
     .addCase(createProduct.rejected,(state,action)=>{

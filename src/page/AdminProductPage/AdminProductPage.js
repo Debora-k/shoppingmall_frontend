@@ -132,6 +132,7 @@ const AdminProductPage = () => {
         mode={mode}
         showDialog={showDialog}
         setShowDialog={setShowDialog}
+        page={searchQuery.page}
       />
       <DeleteProductModal
         showModal={showModal}

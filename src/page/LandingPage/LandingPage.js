@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import ReactPaginate from "react-paginate";
+import { ColorRing } from "react-loader-spinner";
 import ProductCard from "./components/ProductCard";
 import { Row, Col, Container } from "react-bootstrap";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductList } from "../../features/product/productSlice";
 
+
 const LandingPage = () => {
   const dispatch = useDispatch();
 
-
+  const [isDataLoading, setIsDataLoading] = useState(true);
   const { productList, totalPageNum } = useSelector((state) => state.product);
   const [query] = useSearchParams();
   const navigate = useNavigate();
@@ -18,6 +20,16 @@ const LandingPage = () => {
     page: query.get("page") || 1,
     name: query.get("name") || "",
   });
+  
+  useEffect(() => {
+    getDataFromBe();
+  }, [])
+
+  const getDataFromBe = async() => {
+    setIsDataLoading(true);
+    await dispatch(getProductList({...searchQuery, name}));
+    setIsDataLoading(false);
+  }
 
   useEffect(()=>{
     dispatch(getProductList({...searchQuery, name}));
@@ -38,7 +50,23 @@ const LandingPage = () => {
     setSearchQuery({...searchQuery, page: selected + 1});
   };
 
+
+
   return (
+    <>
+      {isDataLoading ?
+      <div style={{justifyContent:'center', display:'flex', alignItems:'center'}}>
+        <ColorRing
+          visible={true}
+          height="160"
+          width="160"
+          ariaLabel="blocks-loading"
+          wrapperStyle={{}}
+          wrapperClass="blocks-wrapper"
+          colors={["#e15b64", "#f47e60", "#f8b26a", "#abbd81", "#849b87"]}
+    />
+    </div>
+    :  
     <Container>
       <Row>
         {productList.length > 0 ? (
@@ -52,7 +80,7 @@ const LandingPage = () => {
             {name === "" ? (
               <h2>등록된 상품이 없습니다!</h2>
             ) : (
-              <h2>{name}과 일치한 상품이 없습니다!`</h2>
+              <h2>{name}과 일치한 상품이 없습니다!</h2>
             )}
           </div>
         )}
@@ -79,6 +107,10 @@ const LandingPage = () => {
           className="display-center list-style-none"
         />
     </Container>
+    
+      }
+    </>
+   
   );
 };
 

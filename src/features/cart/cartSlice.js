@@ -22,7 +22,7 @@ export const addToCart = createAsyncThunk(
       return response.data.cartItemQty;
     }catch(error){
       dispatch(showToastMessage({message:"Failed to add it to your cart",status:"error"}));
-      return rejectWithValue(error.error);
+      return rejectWithValue("Failed to add it to your cart");
     }
   }
 );
@@ -36,7 +36,7 @@ export const getCartList = createAsyncThunk(
       return response.data.data;
     } catch(error){
       dispatch(showToastMessage({message:"Failed to check your cart",status:"error"}));
-      return rejectWithValue(error.error);
+      return rejectWithValue("Failed to check your cart");
     }
   }
 );
@@ -51,7 +51,7 @@ export const deleteCartItem = createAsyncThunk(
       dispatch(getCartList());
       return response.data.data;
     }catch(error){
-      return rejectWithValue(error.error);
+      return rejectWithValue("Failed to delete it!");
     }
   }
 );
@@ -67,7 +67,7 @@ export const updateQty = createAsyncThunk(
     } catch(error){
       console.log(error);
       if(error?.error === "Sorry, there is not enough stock.") dispatch(showToastMessage({message:"Sorry, there is not enough stock.", status:"error"}));;
-      return rejectWithValue(error.error);
+      return rejectWithValue("Sorry, something went wrong while changing the stock!");
     }
   }
 );

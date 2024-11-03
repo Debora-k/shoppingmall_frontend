@@ -63,6 +63,10 @@ export const createProduct = createAsyncThunk(
         dispatch(showToastMessage({message:"Add description", status:"error"}));
         return rejectWithValue("Add description");
       }
+      if(error?.error === "Stock cannot be negative") {
+        dispatch(showToastMessage({message:"Stock cannot be negative", status:"error"}));
+        return rejectWithValue("Stock cannot be negative");
+      }
       return rejectWithValue("Something went wrong!");
     }
   }
@@ -113,6 +117,10 @@ export const editProduct = createAsyncThunk(
       if(error?.error === "Description shouldn't be empty!") {
         dispatch(showToastMessage({message:"Add description", status:"error"}));
         return rejectWithValue("Add description");
+      }
+      if(error?.error === "Stock cannot be negative") {
+        dispatch(showToastMessage({message:"Stock cannot be negative", status:"error"}));
+        return rejectWithValue("Stock cannot be negative");
       }
       return rejectWithValue("Something went wrong! Please try again.");
     }

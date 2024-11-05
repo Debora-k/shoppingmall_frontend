@@ -32,7 +32,16 @@ const PaymentPage = () => {
   const {cartList, totalPrice } = useSelector((state)=> state.cart);
 
   useEffect(() => {
-    // 오더번호를 받으면 어디로 갈까?
+    // to prevent to display orderCompletePage at first call
+    if(firstLoading){
+      setFirstLoading(false);
+    } else {
+      // 오더번호를 받으면 어디로 갈까?
+      // 오더성공페이지로
+      if(orderNum !== "") {
+        navigate("/payment/success");
+      }
+    }
   }, [orderNum]);
 
   const handleSubmit = (event) => {

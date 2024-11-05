@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate} from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { useSearchParams } from "react-router-dom";
@@ -6,6 +7,7 @@ import { useSearchParams } from "react-router-dom";
 const SearchBox = ({ searchQuery, setSearchQuery, placeholder, field }) => {
   const [query] = useSearchParams();
   const [keyword, setKeyword] = useState(query.get(field) || "");
+  let navigate = useNavigate();
 
   const onCheckEnter = (event) => {
     if (event.key === "Enter") {
@@ -21,7 +23,7 @@ const SearchBox = ({ searchQuery, setSearchQuery, placeholder, field }) => {
         placeholder={placeholder}
         onKeyPress={onCheckEnter}
         onChange={(event) => setKeyword(event.target.value)}
-        //value={keyword}
+        value={keyword}
       />
     </div>
   );

@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import { Offcanvas, Navbar, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { getOrderList } from "../../features/order/orderSlice";
 
 const Sidebar = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
+  const dispatch = useDispatch();
 
   const handleSelectMenu = (url) => {
     setShow(false);
+    if(url==="/admin/order?page=1") {
+     dispatch(getOrderList({page:1}));
+    } 
     navigate(url);
   };
 

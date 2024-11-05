@@ -19,7 +19,7 @@ const AdminOrderPage = () => {
   const { orderList, totalPageNum } = useSelector((state) => state.order);
   const [searchQuery, setSearchQuery] = useState({
     page: query.get("page") || 1,
-    ordernum: query.get("ordernum") || "",
+    orderNum: query.get("orderNum") || "",
   });
   const [open, setOpen] = useState(false);
 
@@ -39,13 +39,18 @@ const AdminOrderPage = () => {
   }, [query]);
 
   useEffect(() => {
-    if (searchQuery.ordernum === "") {
-      delete searchQuery.ordernum;
+    if (searchQuery.orderNum === "") {
+      delete searchQuery.orderNum;
     }
+
+
     const params = new URLSearchParams(searchQuery);
     const queryString = params.toString();
 
     navigate("?" + queryString);
+
+
+
   }, [searchQuery]);
 
   const openEditForm = (order) => {
@@ -68,8 +73,8 @@ const AdminOrderPage = () => {
           <SearchBox
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
-            placeholder="오더번호"
-            field="ordernum"
+            placeholder="Order #"
+            field="orderNum"
           />
         </div>
 
@@ -101,7 +106,7 @@ const AdminOrderPage = () => {
         />
       </Container>
 
-      {open && <OrderDetailDialog open={open} handleClose={handleClose} />}
+      {open && <OrderDetailDialog open={open} handleClose={handleClose} page={searchQuery.page}/>}
     </div>
   );
 };

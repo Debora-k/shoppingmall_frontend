@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import ReactPaginate from "react-paginate";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import OrderDetailDialog from "./component/OrderDetailDialog";
 import OrderTable from "./component/OrderTable";
 import SearchBox from "../../common/component/SearchBox";
@@ -22,6 +22,7 @@ const AdminOrderPage = () => {
     orderNum: query.get("orderNum") || "",
   });
   const [open, setOpen] = useState(false);
+  const location = useLocation();
 
   const tableHeader = [
     "#",
@@ -34,16 +35,16 @@ const AdminOrderPage = () => {
     "Status",
   ];
 
+
   useEffect(() => {
-    dispatch(getOrderList({ ...searchQuery }));
+    dispatch(getOrderList({...searchQuery}));
   }, [query]);
 
   useEffect(() => {
     if (searchQuery.orderNum === "") {
       delete searchQuery.orderNum;
     }
-
-
+    
     const params = new URLSearchParams(searchQuery);
     const queryString = params.toString();
 

@@ -10,7 +10,6 @@ export const getProductList = createAsyncThunk(
     try{
       const response = await api.get("/product", {params:{...query}});
       console.log("rrrrr", response);
-      if(response.status !== 200) throw new Error(response.error);
       return response.data;
     }catch(error){
       return rejectWithValue(error.error);
@@ -23,7 +22,6 @@ export const getProductDetail = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try{
       const response = await api.get(`/product/${id}`);
-      if(response.status!==200) throw new Error(response.error);
       return response.data.data;
     }catch(error){
       return rejectWithValue(error.error);
@@ -35,9 +33,7 @@ export const createProduct = createAsyncThunk(
   "products/createProduct",
   async (formData, { dispatch, rejectWithValue }) => {
     try{
-      const response = await api.post("/product",formData);
-      if(response.status!==200) throw new Error(response.error);
-      
+      const response = await api.post("/product",formData);   
       dispatch(showToastMessage({message:"상품생성완료", status:"success"}));
       dispatch(getProductList({page:1}));
       return response.data.data;
@@ -77,7 +73,6 @@ export const deleteProduct = createAsyncThunk(
   async (id, { dispatch, rejectWithValue }) => {
     try{
       const response = await api.delete(`/product/${id}`);
-      if(response.status!==200) throw new Error(response.error);
       dispatch(showToastMessage({message:"상품삭제완료", status:"success"}));
       dispatch(getProductList({page:1}));
       return response.data.data;
@@ -93,7 +88,6 @@ export const editProduct = createAsyncThunk(
   async ({ id, page, ...formData }, { dispatch, rejectWithValue }) => {
     try{
       const response = await api.put(`/product/${id}`, formData);
-      if(response.status!==200) throw new Error(response.error);
       dispatch(showToastMessage({message:"상품수정완료", status:"success"}));
       dispatch(getProductList({page:page}));
       return response.data.data;

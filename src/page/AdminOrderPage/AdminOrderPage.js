@@ -40,6 +40,7 @@ const AdminOrderPage = () => {
     dispatch(getOrderList({...searchQuery}));
     if(searchQuery.orderNum !== "") {
       delete searchQuery.orderNum;
+      
     }
   }, [query]);
 

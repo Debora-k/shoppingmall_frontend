@@ -28,6 +28,7 @@ const AdminProductPage = () => {
   const [mode, setMode] = useState("new");
   const [productIdToDelete, setProductIdToDelete] = useState(null);
 
+
   const tableHeader = [
     "#",
     "Sku",

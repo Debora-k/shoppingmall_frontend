@@ -42,6 +42,9 @@ const AdminProductPage = () => {
   //상품리스트 가져오기 (url쿼리 맞춰서)
   useEffect(()=>{
     dispatch(getProductList({...searchQuery}));
+    if(searchQuery.name !== "") {
+      delete searchQuery.name;
+    }
   },[query])
 
   useEffect(() => {

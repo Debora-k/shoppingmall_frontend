@@ -38,13 +38,17 @@ const AdminOrderPage = () => {
 
   useEffect(() => {
     dispatch(getOrderList({...searchQuery}));
+    if(searchQuery.orderNum !== "") {
+      delete searchQuery.orderNum;
+    }
   }, [query]);
 
   useEffect(() => {
     if (searchQuery.orderNum === "") {
       delete searchQuery.orderNum;
+      
     }
-    
+
     const params = new URLSearchParams(searchQuery);
     const queryString = params.toString();
 

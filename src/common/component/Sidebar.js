@@ -9,6 +9,7 @@ const Sidebar = () => {
   const handleSelectMenu = (url) => {
     setShow(false);
     navigate(url);
+    
   };
 
   const NavbarContent = () => {

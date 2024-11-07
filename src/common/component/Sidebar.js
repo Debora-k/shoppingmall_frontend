@@ -8,8 +8,7 @@ const Sidebar = () => {
 
   const handleSelectMenu = (url) => {
     setShow(false);
-    navigate(url);
-    
+    navigate(url, { state: { firstTime: true } });
   };
 
   const NavbarContent = () => {

@@ -17,12 +17,14 @@ const AdminOrderPage = () => {
   const [query] = useSearchParams();
   const dispatch = useDispatch();
   const { orderList, totalPageNum } = useSelector((state) => state.order);
+  const [selectedPage, setSelectedPage] = useState();
   const [searchQuery, setSearchQuery] = useState({
     page: query.get("page") || 1,
     orderNum: query.get("orderNum") || "",
   });
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const refresh = location.state?.firstTime
 
   const tableHeader = [
     "#",
@@ -37,25 +39,23 @@ const AdminOrderPage = () => {
 
 
   useEffect(() => {
-    dispatch(getOrderList({...searchQuery}));
-    if(searchQuery.orderNum !== "") {
+    if (refresh) {
       delete searchQuery.orderNum;
-      
     }
-  }, [query]);
+    dispatch(getOrderList({...searchQuery}));
+  }, [query, refresh]);
+
+
 
   useEffect(() => {
     if (searchQuery.orderNum === "") {
       delete searchQuery.orderNum;
       
     }
-
     const params = new URLSearchParams(searchQuery);
     const queryString = params.toString();
 
     navigate("?" + queryString);
-
-
 
   }, [searchQuery]);
 

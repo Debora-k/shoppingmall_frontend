@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Container, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import SearchBox from "../../common/component/SearchBox";
 import NewItemDialog from "./component/NewItemDialog";
@@ -27,6 +27,8 @@ const AdminProductPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [mode, setMode] = useState("new");
   const [productIdToDelete, setProductIdToDelete] = useState(null);
+  const location = useLocation();
+  const refresh = location.state?.firstTime;
 
 
   const tableHeader = [
@@ -42,11 +44,11 @@ const AdminProductPage = () => {
 
   //상품리스트 가져오기 (url쿼리 맞춰서)
   useEffect(()=>{
-    dispatch(getProductList({...searchQuery}));
-    if(searchQuery.name !== "") {
+    if(refresh){
       delete searchQuery.name;
     }
-  },[query])
+    dispatch(getProductList({...searchQuery}));
+  },[query, refresh])
 
   useEffect(() => {
     //검색어나 페이지가 바뀌면 url바꿔주기 (검색어또는 페이지가 바뀜 => url 바꿔줌=> url쿼리 읽어옴=> 이 쿼리값 맞춰서  상품리스트 가져오기)

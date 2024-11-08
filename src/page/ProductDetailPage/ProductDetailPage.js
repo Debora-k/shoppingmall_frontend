@@ -61,8 +61,10 @@ const ProductDetail = () => {
   }, [id, dispatch]);
 
   useEffect(() => {
-    dispatch(getCartList());
-  }, [dispatch]);
+    if(user){
+      dispatch(getCartList());
+    }
+  }, [dispatch, user]);
 
   if (loading || !selectedProduct)
     return (

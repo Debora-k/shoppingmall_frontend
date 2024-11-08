@@ -28,7 +28,7 @@ const PaymentPage = () => {
     city: "",
     zip: "",
   });
-  console.log("shipinfo",shipInfo);
+
   const {cartList, totalPrice } = useSelector((state)=> state.cart);
 
   useEffect(() => {

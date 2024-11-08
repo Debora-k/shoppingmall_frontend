@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../utils/api";
 import { showToastMessage } from "../common/uiSlice";
-import ProductDetail from "../../page/ProductDetailPage/ProductDetailPage";
 
 // 비동기 액션 생성
 export const getProductList = createAsyncThunk(
@@ -9,13 +8,13 @@ export const getProductList = createAsyncThunk(
   async (query, { rejectWithValue }) => {
     try{
       const response = await api.get("/product", {params:{...query}});
-      console.log("rrrrr", response);
       return response.data;
     }catch(error){
       return rejectWithValue(error.error);
     }
   }
 );
+
 
 export const getProductDetail = createAsyncThunk(
   "products/getProductDetail",

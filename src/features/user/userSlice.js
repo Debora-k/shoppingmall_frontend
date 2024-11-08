@@ -36,7 +36,6 @@ export const logout = createAsyncThunk(
   async({navigate},{dispatch, rejectWithValue}) => {
     try{
       await sessionStorage.removeItem("token");
-      // navigate("/login");
     } catch(error){
       dispatch(showToastMessage({message:"Sorry, logout failed", status:"error"}));
       return rejectWithValue(error.error);
@@ -112,11 +111,9 @@ const userSlice = createSlice({
       state.loading=false;
       state.loginError=action.payload;
     })
-    //.addCase(loginWithToken.pending,(state,action)=>{}) // no need to display pending for users
     .addCase(loginWithToken.fulfilled,(state,action)=>{
       state.user = action.payload.user;
     }) 
-    //.addCase(loginWithToken.rejected,(state,action)=>{}) // also users don't need to know rejected (leading to login page)
     .addCase(logout.pending, (state,action)=> {
       state.loading=true;
     })

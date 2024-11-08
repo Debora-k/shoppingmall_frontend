@@ -6,6 +6,17 @@ import { Row, Col, Container } from "react-bootstrap";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getProductList } from "../../features/product/productSlice";
+import WelcomeVideo from "./components/WelcomeVideo";
+
+function getWeekDates() {
+  let start = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000); 
+  start.setHours(0, 0, 0, 0);
+  let end = new Date();
+
+  return [start, end];
+}
+
+
 
 
 const LandingPage = () => {
@@ -51,7 +62,7 @@ const LandingPage = () => {
   };
 
 
-
+  let [start, end] = getWeekDates();
   return (
     <>
       {isDataLoading ?
@@ -68,6 +79,31 @@ const LandingPage = () => {
     </div>
     :  
     <Container>
+      <WelcomeVideo />
+       {+searchQuery.page === 1 && 
+        (<>
+          <br></br>
+          <br></br>
+          <Row>
+            <div>
+              <h6>NEW IN</h6>
+            </div>
+            {productList
+              .filter((item) => item.createdAt >= start.toISOString() && item.createdAt < end.toISOString())
+              .map((item) => (
+                <Col md={3} sm={12} key={item._id}>
+                  <ProductCard item={item} />
+                </Col>
+              ))}
+          </Row>
+        </>)}
+        <br></br>
+        <br></br>
+        <br></br>
+        <br></br>
+        <div>
+          <h6>ITEMS</h6>
+        </div>
       <Row>
         {productList.length > 0 ? (
           productList.map((item) => (

@@ -8,7 +8,7 @@ const WelcomeVideo =() => {
     })
         return (
             <div>
-                <video src={video} autoPlay muted loop />
+                <video src={video} autoPlay muted loop playsInline/>
             </div>
         );
 
